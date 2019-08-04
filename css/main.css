@@ -4,17 +4,39 @@
 
 body {
   display: grid;
+  justify-content: center;
+  align-items: center;
   grid-template-columns: 1fr 2fr 1fr;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 100px auto;
   grid-template-areas: 
     "hdr hdr hdr"
-    "container";
+    "side1 cntr side2"
+    "side1 cntr2 side2";
 }
 
 header {
   grid-area: hdr;
+  background-color: blue;
 }
 
-section {
-  grid-area: container;
+section.container {
+  display: grid;
+  justify-content: center;
+  grid-area: cntr;
+  margin: 20px;
+  grid-template-columns: repeat(8, 40px);
+  grid-template-rows: repeat(8, 40px);
+}
+
+section.container2 {
+  display: grid;
+  justify-content: center;
+  grid-area: cntr2;
+  margin: 20px;
+  grid-template-columns: repeat(8, 40px);
+  grid-template-rows: repeat(8, 40px);
+}
+
+div.board1, div.board2 {
+  border: 1px solid black;
 }
