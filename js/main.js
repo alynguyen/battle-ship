@@ -1,19 +1,22 @@
 /*----- constants -----*/ 
 const BOARDST = {
-  '0': 'grey',
-  '1': 'black',
-  '2': 'red'
+  0: 'grey',
+  1: 'black',
+  2: 'red'
 };
-const ship1 = {
-  name
+const SHIPS = {
+  ship1: 0,
+  ship2: 1,
+  ship3: 2
 }
 /*----- app's state (variables) -----*/ 
 let board, turn, moves, winner;
+let shipPos = [];
 
 /*----- cached element references -----*/ 
 
 /*----- event listeners -----*/
-document.querySelector('.container').addEventListener('click', whenClick);
+document.querySelector('.container').addEventListener('click', placeShip);
 document.querySelector('.container2').addEventListener('click', whenClick2);
 
 
@@ -54,10 +57,17 @@ function render() {
   });
 }
 
-function whenClick(evt) {
-  let loc = parseInt(evt.target.id.replace('pos', ''));
-  board[loc] = 1;
-  console.log(loc);
+function placeShip(evt) {
+  let pos = parseInt(evt.target.id.replace('pos', ''));
+  if (!shipPos.includes(pos)) {
+    board[pos] = 1;
+    board[pos + SHIPS.ship2] = 1;
+    shipPos.push(pos);
+    console.log(shipPos);
+  } else {
+    console.log('spot taken');
+    return;
+  }
   render();
 }
 
