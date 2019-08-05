@@ -5,12 +5,14 @@ const BOARDST = {
   2: 'red'
 };
 const SHIPS = {
+  ship1: [0, 1],
   ship2: [0, 1],
   ship3: [0, 1, 2],
   ship4: [0, 1, 2, 3],
+  ship1v: [0, 8],
   ship2v: [0, 8],
   ship3v: [0, 8, 16],
-  ship4v: [0, 8, 16, 24]
+  ship4v: [0, 8, 16, 24],
 }
 
 const REDZONE = {
@@ -26,6 +28,10 @@ let board, turn, moves, winner;
 let shipPos = [];
 let hConstraints = [];
 let vConstraints = [];
+let s4VConstraints = [];
+let s4HConstraints = [];
+let s2VConstraints = [];
+let s2HConstraints = [];
 let sPlaced = 0;
 let dir = 1;
 
@@ -33,8 +39,8 @@ let dir = 1;
 
 
 /*----- event listeners -----*/
-// document.querySelector('.container').addEventListener('click', placeShip3);
 document.querySelector('.container2').addEventListener('click', whenClick2);
+document.getElementById('btnS1').addEventListener('click', initS1);
 document.getElementById('btnS2').addEventListener('click', initS2);
 document.getElementById('btnS3').addEventListener('click', initS3);
 document.getElementById('btnS4').addEventListener('click', initS4);
@@ -77,21 +83,21 @@ function render() {
   });
 }
 
-function initS2(){
-  document.querySelector('.container').addEventListener('mouseover', hvrOverS2);
-  document.querySelector('.container').addEventListener('mouseout', hvrOutS2);
-  document.querySelector('.container').addEventListener('click', addS2);
-}
-
 function rotate() {
   dir *= -1;
 }
 
-function hvrOverS2(evt) {
+function initS1(){
+  document.querySelector('.container').addEventListener('mouseover', hvrOverS1);
+  document.querySelector('.container').addEventListener('mouseout', hvrOutS1);
+  document.querySelector('.container').addEventListener('click', addS1);
+}
+
+function hvrOverS1(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
     if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos)) {
-      SHIPS.ship2.forEach(function(p, i) {
+      SHIPS.ship1.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 2;
       });
@@ -99,6 +105,118 @@ function hvrOverS2(evt) {
   };
   if (dir === -1) {
     if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos)) {
+      SHIPS.ship1v.forEach(function(p, i) {
+        let tpos = pos + p;
+        board[pos + p] = 2;
+      })
+    };
+  };
+  render();
+}
+
+function hvrOutS1(evt) {
+  let pos = parseInt(evt.target.id.replace('pos', ''));
+  if (dir === 1) {
+    if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos)) {
+      SHIPS.ship1.forEach(function(p, i) {
+        let tpos = pos + p;
+        board[pos + p] = 0;
+      });
+    };
+  };
+  if (dir === -1) {
+    if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos)) {
+      SHIPS.ship1v.forEach(function(p, i) {
+        let tpos = pos + p;
+        board[pos + p] = 0;
+      })
+    };
+  };
+  render();
+}
+
+function addS1(evt) {
+  let pos = parseInt(evt.target.id.replace('pos', ''));
+  if (dir === 1) {
+    if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos) 
+      && !hConstraints.includes(pos)) {
+      SHIPS.ship1.forEach(function(p, i) {
+        let tpos = pos + p;
+        shipPos.push(tpos);
+        hConstraints.push(tpos - 1);
+        hConstraints.push(tpos - 2);
+        s2HConstraints.push(tpos - 1);
+        s2VConstraints.push(tpos - 8);
+        s4HConstraints.push(tpos - 3);
+        s4VConstraints.push(tpos - 24);
+        vConstraints.push(tpos - 8);
+        vConstraints.push(tpos - 16);
+        board[pos + p] = 1;
+        sPlaced ++;
+      });
+      document.querySelector('.container').removeEventListener('mouseover', hvrOverS1);
+      document.querySelector('.container').removeEventListener('mouseout', hvrOutS1);
+      document.querySelector('.container').removeEventListener('click', addS1);
+      document.getElementById('btnS1').disabled = true;    
+      render();
+    } else {
+      console.log('spot taken');
+      return;
+    }
+  }
+  if (dir === -1) {
+    if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos) 
+      && !vConstraints.includes(pos)) {
+      SHIPS.ship1v.forEach(function(p, i) {
+        let tpos = pos + p;
+        shipPos.push(tpos);
+        hConstraints.push(tpos - 1);
+        hConstraints.push(tpos - 2);
+        vConstraints.push(tpos - 8);
+        vConstraints.push(tpos - 16);
+        s2HConstraints.push(tpos - 1);
+        s2VConstraints.push(tpos - 8);
+        s4HConstraints.push(tpos - 3);
+        s4VConstraints.push(tpos - 24);
+        board[pos + p] = 1;
+        sPlaced ++;
+        console.log(tpos);
+      });
+    } else {
+      console.log('spot taken');
+      return;
+    }
+    document.querySelector('.container').removeEventListener('mouseover', hvrOverS1);
+    document.querySelector('.container').removeEventListener('mouseout', hvrOutS1);
+    document.querySelector('.container').removeEventListener('click', addS1);
+    document.getElementById('btnS1').disabled = true;    
+    render();
+  }
+}
+
+function initS2(){
+  document.querySelector('.container').addEventListener('mouseover', hvrOverS2);
+  document.querySelector('.container').addEventListener('mouseout', hvrOutS2);
+  document.querySelector('.container').addEventListener('click', addS2);
+}
+
+
+function hvrOverS2(evt) {
+  let pos = parseInt(evt.target.id.replace('pos', ''));
+  if (dir === 1) {
+    if (!shipPos.includes(pos) 
+      && !REDZONE.h7.includes(pos)
+      && !s2HConstraints.includes(pos)) {
+      SHIPS.ship2.forEach(function(p, i) {
+        let tpos = pos + p;
+        board[pos + p] = 2;
+      });
+    };
+  };
+  if (dir === -1) {
+    if (!shipPos.includes(pos) 
+      && !REDZONE.v56.includes(pos)
+      && !s2VConstraints.includes(pos)) {
       SHIPS.ship2v.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 2;
@@ -111,7 +229,9 @@ function hvrOverS2(evt) {
 function hvrOutS2(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
-    if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos)) {
+    if (!shipPos.includes(pos) 
+      && !REDZONE.h7.includes(pos)
+      && !s2HConstraints.includes(pos)) {
       SHIPS.ship2.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 0;
@@ -119,11 +239,14 @@ function hvrOutS2(evt) {
     };
   };
   if (dir === -1) {
-    if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos)) {
+    if (!shipPos.includes(pos) 
+      && !REDZONE.v56.includes(pos)
+      && !s2VConstraints.includes(pos)) {
       SHIPS.ship2v.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 0;
-      })
+        console.log(tpos);
+      });
     };
   };
   render();
@@ -132,15 +255,19 @@ function hvrOutS2(evt) {
 function addS2(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
-    if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos) 
-      && !hConstraints.includes(pos)) {
+    if (!shipPos.includes(pos) 
+      && !REDZONE.h7.includes(pos) 
+      && !hConstraints.includes(pos)
+      && !s2HConstraints.includes(pos)) {
       SHIPS.ship2.forEach(function(p, i) {
         let tpos = pos + p;
         shipPos.push(tpos);
         hConstraints.push(tpos - 1);
         hConstraints.push(tpos - 2);
+        s4HConstraints.push(tpos -3);
         vConstraints.push(tpos - 8);
         vConstraints.push(tpos - 16);
+        s4VConstraints.push(tpos - 24);
         board[pos + p] = 1;
         sPlaced ++;
       });
@@ -148,21 +275,26 @@ function addS2(evt) {
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS2);
       document.querySelector('.container').removeEventListener('click', addS2);
       document.getElementById('btnS2').disabled = true;    
+      render();
     } else {
       console.log('spot taken');
       return;
     }
   }
   if (dir === -1) {
-    if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos) 
-      && !vConstraints.includes(pos)) {
+    if (!shipPos.includes(pos) 
+      && !REDZONE.v56.includes(pos) 
+      && !vConstraints.includes(pos)
+      && !s2VConstraints.includes(pos)) {
       SHIPS.ship2v.forEach(function(p, i) {
         let tpos = pos + p;
         shipPos.push(tpos);
         hConstraints.push(tpos - 1);
         hConstraints.push(tpos - 2);
+        s4HConstraints.push(tpos -3);
         vConstraints.push(tpos - 8);
         vConstraints.push(tpos - 16);
+        s4VConstraints.push(tpos - 24);
         board[pos + p] = 1;
         sPlaced ++;
         console.log(tpos);
@@ -175,8 +307,8 @@ function addS2(evt) {
     document.querySelector('.container').removeEventListener('mouseout', hvrOutS2);
     document.querySelector('.container').removeEventListener('click', addS2);
     document.getElementById('btnS2').disabled = true;    
+    render();
   }
-  render();
 }
 
 function initS3(){
@@ -188,32 +320,38 @@ function initS3(){
 function hvrOverS3(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
-    if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.h7.includes(pos) 
       && !REDZONE.h6.includes(pos) 
       && !hConstraints.includes(pos)) {
       SHIPS.ship3.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 2;
+        console.log(tpos);
       });
     };
+    render();
   };
   if (dir === -1) {
-    if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.v56.includes(pos) 
       && !REDZONE.v48.includes(pos) 
       && !vConstraints.includes(pos)) {
       SHIPS.ship3v.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 2;
-      })
+        console.log(tpos);
+      });
     };
+    render();
   };
-  render();
-}
+};
 
 function hvrOutS3(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
-    if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.h7.includes(pos) 
       && !REDZONE.h6.includes(pos)
       && !hConstraints.includes(pos)) {
       SHIPS.ship3.forEach(function(p, i) {
@@ -221,9 +359,11 @@ function hvrOutS3(evt) {
         board[pos + p] = 0;
       });
     };
+    render();
   };
   if (dir === -1) {
-    if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.v56.includes(pos) 
       && !REDZONE.v48.includes(pos)
       && !vConstraints.includes(pos)) {
       SHIPS.ship3v.forEach(function(p, i) {
@@ -231,14 +371,15 @@ function hvrOutS3(evt) {
         board[pos + p] = 0;
       })
     };
+    render();
   };
-  render();
 }
 
 function addS3(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
-    if (!shipPos.includes(pos) && !REDZONE.h6.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.h6.includes(pos) 
       && !REDZONE.h7.includes(pos) 
       && !hConstraints.includes(pos)) {
       SHIPS.ship3.forEach(function(p, i) {
@@ -249,45 +390,49 @@ function addS3(evt) {
         hConstraints.push(tpos - 3);
         vConstraints.push(tpos - 8);
         vConstraints.push(tpos - 16);
-        vConstraints.push(tpos - 32);
+        vConstraints.push(tpos - 24);
         board[pos + p] = 1;
         sPlaced ++;
       });
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS3);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS3);
       document.querySelector('.container').removeEventListener('click', addS3);
-      document.getElementById('btnS3').disabled = true;    
+      document.getElementById('btnS3').disabled = true;
+      render();
     } else {
       console.log('spot taken');
       return;
     }
   }
   if (dir === -1) {
-    if (!shipPos.includes(pos) && !REDZONE.h6.includes(pos) 
-      && !REDZONE.h7.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.v48.includes(pos) 
+      && !REDZONE.v56.includes(pos) 
       && !vConstraints.includes(pos)) {
       SHIPS.ship3v.forEach(function(p, i) {
         let tpos = pos + p;
+        console.log(tpos);
         shipPos.push(tpos);
         hConstraints.push(tpos - 1);
         hConstraints.push(tpos - 2);
         hConstraints.push(tpos - 3);
         vConstraints.push(tpos - 8);
         vConstraints.push(tpos - 16);
-        vConstraints.push(tpos - 32);
+        vConstraints.push(tpos - 24);
+        // vConstraints.push(tpos - 32);
         board[pos + p] = 1;
         sPlaced ++;
       });
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS3);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS3);
       document.querySelector('.container').removeEventListener('click', addS3);
-      document.getElementById('btnS3').disabled = true;    
+      document.getElementById('btnS3').disabled = true;
+      render();
     } else {
       console.log('spot taken');
       return;
     }
   }
-  render();
 }
 
 function initS4(){
@@ -299,64 +444,78 @@ function initS4(){
 function hvrOverS4(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
-    if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos) 
-      && !REDZONE.h6.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.h7.includes(pos) 
+      && !REDZONE.h6.includes(pos)
       && !REDZONE.h5.includes(pos)
-      && !hConstraints.includes(pos)) {
+      && !hConstraints.includes(pos)
+      && !s4HConstraints.includes(pos)) {
       SHIPS.ship4.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 2;
+        console.log(tpos);
       });
     };
+    render();
   };
   if (dir === -1) {
-    if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.v56.includes(pos) 
       && !REDZONE.v48.includes(pos)
       && !REDZONE.v40.includes(pos) 
-      && !vConstraints.includes(pos)) {
+      && !vConstraints.includes(pos)
+      && !s4VConstraints.includes(pos)) {
       SHIPS.ship4v.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 2;
-      })
+        console.log(tpos);
+      });
     };
+    render();
   };
-  render();
-}
+};
 
 function hvrOutS4(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
-    if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.h7.includes(pos) 
       && !REDZONE.h6.includes(pos)
       && !REDZONE.h5.includes(pos)
-      && !hConstraints.includes(pos)) {
+      && !hConstraints.includes(pos)
+      && !s4HConstraints.includes(pos)) {
       SHIPS.ship4.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 0;
       });
     };
+    render();
   };
   if (dir === -1) {
-    if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos) 
+    if (!shipPos.includes(pos) 
+      && !REDZONE.v56.includes(pos) 
       && !REDZONE.v48.includes(pos)
       && !REDZONE.v40.includes(pos)
-      && !vConstraints.includes(pos)) {
+      && !vConstraints.includes(pos)
+      && !s4VConstraints.includes(pos)) {
       SHIPS.ship4v.forEach(function(p, i) {
         let tpos = pos + p;
         board[pos + p] = 0;
       })
     };
+    render();
   };
-  render();
 }
 
 function addS4(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
-    if (!shipPos.includes(pos) && !REDZONE.h5.includes(pos) 
+    if (!shipPos.includes(pos) 
       && !REDZONE.h6.includes(pos) 
-      && !REDZONE.h7.includes(pos)
-      && !hConstraints.includes(pos)) {
+      && !REDZONE.h7.includes(pos) 
+      && !REDZONE.h5.includes(pos)
+      && !hConstraints.includes(pos)
+      && !s4HConstraints.includes(pos)) {
       SHIPS.ship4.forEach(function(p, i) {
         let tpos = pos + p;
         shipPos.push(tpos);
@@ -366,33 +525,36 @@ function addS4(evt) {
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS4);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS4);
       document.querySelector('.container').removeEventListener('click', addS4);
-      document.getElementById('btnS4').disabled = true;    
+      document.getElementById('btnS4').disabled = true;
+      render();
     } else {
       console.log('spot taken');
       return;
     }
   }
   if (dir === -1) {
-    if (!shipPos.includes(pos) && !REDZONE.h5.includes(pos) 
-    && !REDZONE.h6.includes(pos) 
-    && !REDZONE.h7.includes(pos)
-    && !vConstraints.includes(pos)) {
-    SHIPS.ship4.forEach(function(p, i) {
-      let tpos = pos + p;
-      shipPos.push(tpos);
-      board[pos + p] = 1;
-      sPlaced ++;
-    });
-    document.querySelector('.container').removeEventListener('mouseover', hvrOverS4);
-    document.querySelector('.container').removeEventListener('mouseout', hvrOutS4);
-    document.querySelector('.container').removeEventListener('click', addS4);
-    document.getElementById('btnS4').disabled = true;    
-  } else {
-    console.log('spot taken');
-    return;
+    if (!shipPos.includes(pos) 
+      && !REDZONE.v40.includes(pos) 
+      && !REDZONE.v48.includes(pos) 
+      && !REDZONE.v56.includes(pos)
+      && !vConstraints.includes(pos)
+      && !s4VConstraints.includes(pos)) {
+      SHIPS.ship4v.forEach(function(p, i) {
+        let tpos = pos + p;
+        shipPos.push(tpos);
+        board[pos + p] = 1;
+        sPlaced ++;
+      });
+      document.querySelector('.container').removeEventListener('mouseover', hvrOverS4);
+      document.querySelector('.container').removeEventListener('mouseout', hvrOutS4);
+      document.querySelector('.container').removeEventListener('click', addS4);
+      document.getElementById('btnS4').disabled = true;
+      render();
+    } else {
+      console.log('spot taken');
+      return;
+    }
   }
-  }
-  render();
 }
 
 function whenClick2(evt) {
