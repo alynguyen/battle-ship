@@ -37,6 +37,16 @@ section.container2 {
   grid-template-rows: repeat(8, 40px);
 }
 
+section.leftside {
+  display: grid;
+  grid-area: side1;
+}
+
+section.rightside {
+  display: grid;
+  grid-area: side2;
+}
+
 div.board1, div.board2 {
   border: 1px solid black;
 }
