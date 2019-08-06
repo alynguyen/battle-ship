@@ -4,6 +4,7 @@ const BOARDST = {
   1: 'black',
   2: 'red'
 };
+
 const SHIPS = {
   ship1: [0, 1],
   ship2: [0, 1],
@@ -23,15 +24,23 @@ const REDZONE = {
   v48: [48, 49, 50, 51, 52, 53, 54, 55],
   v56: [56, 57, 58, 59, 60, 61, 62, 63],
 }
+
+const AIDIR = [-1, 1]
+
+
 /*----- app's state (variables) -----*/ 
 let board, turn, moves, winner;
 let shipPos = [];
+let aiShipPos = [];
 let hConstraints = [];
 let vConstraints = [];
 let s4VConstraints = [];
 let s4HConstraints = [];
 let s2VConstraints = [];
 let s2HConstraints = [];
+let aiS2VConstraints = [];
+let aiS2HConstraints = [];
+let aiSPlaced = 0;
 let sPlaced = 0;
 let dir = 1;
 
@@ -85,6 +94,14 @@ function render() {
 
 function rotate() {
   dir *= -1;
+}
+
+function rng(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function aiRngDir(AIDIR) {
+  return AIDIR[Math.floor(Math.random() * AIDIR.length)];
 }
 
 function initS1(){
@@ -564,6 +581,86 @@ function whenClick2(evt) {
   render();
 }
 
+function aiShip1() {
+  let ship1Arr = new Array();
+  let aiDirection = aiRngDir(AIDIR);
+  console.log(`AI is going ` + aiDirection);
+  if (aiDirection === 1) {
+    for (var i = 0; i < 64; i++)
+      if (!REDZONE.h7.includes(i)) {
+        ship1Arr.push(i);
+      }
+    let rngPos = aiRngDir(ship1Arr);
+    console.log(rngPos);
+    SHIPS.ship1.forEach(function(p, i) {
+      let aiTPos = rngPos + p;
+      aiShipPos.push(aiTPos);
+      aiS2HConstraints.push(aiTPos - 1);
+      aiS2VConstraints.push(aiTPos - 8);
+      board2[rngPos + p] = 1;
+      aiSPlaced ++;
+    });   
+  }
+  if (aiDirection === -1) {
+    for (var i = 0; i < 64; i++)
+      if (!REDZONE.v56.includes(i)) {
+        ship1Arr.push(i);
+      }
+    let rngPos = aiRngDir(ship1Arr);
+    console.log(rngPos);
+    SHIPS.ship1v.forEach(function(p, i) {
+      let aiTPos = rngPos + p;
+      aiShipPos.push(aiTPos);
+      aiS2HConstraints.push(aiTPos - 1);
+      aiS2VConstraints.push(aiTPos - 8);
+      board2[rngPos + p] = 1;
+      aiSPlaced ++;
+    }); 
+  }
+  render();
+}
+
+
+// function aiShip1() {
+//   let aiDirection = aiRngDir(AIDIR);
+//   console.log(`AI is going ` + aiDirection);
+//   if (aiDirection === 1) {
+//     let rngPos = rng(0, 63);
+//     console.log(rngPos);
+//     if (!REDZONE.h7.includes(rngPos)) {
+//       SHIPS.ship1.forEach(function(p, i) {
+//         let aiTPos = rngPos + p;
+//         aiShipPos.push(aiTPos);
+//         aiS2HConstraints.push(aiTPos - 1);
+//         aiS2VConstraints.push(aiTPos - 8);
+//         board2[rngPos + p] = 1;
+//         aiSPlaced ++;
+//       });
+//     } else {
+//       return;
+//     }
+//   }
+//   if (aiDirection === -1) {
+//     let rngPos = rng(0, 63);
+//     console.log(rngPos);
+//     if (!REDZONE.v56.includes(rngPos)) {
+//       SHIPS.ship1v.forEach(function(p, i) {
+//         let aiTPos = rngPos + p;
+//         aiShipPos.push(aiTPos);
+//         aiS2HConstraints.push(aiTPos - 1);
+//         aiS2VConstraints.push(aiTPos - 8);
+//         board2[rngPos + p] = 1;
+//         aiSPlaced ++;
+//       });
+//     } else {
+//       return;
+//     }
+//   }
+//   render();
+// }
+
+aiShip1();
+
 // function addShip3(pos) {
 //   SHIPS.ship3.forEach(function(p, i) {
 //     let tpos = pos + p;
@@ -587,3 +684,14 @@ function whenClick2(evt) {
 //     }
 //   });
 // }
+
+
+
+
+
+
+// generate random direction
+
+// random number > check if that number is Valid
+
+// if valid > place ship
