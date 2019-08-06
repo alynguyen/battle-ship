@@ -2,7 +2,8 @@
 const BOARDST = {
   0: 'grey',
   1: 'black',
-  2: 'red'
+  2: 'red',
+  3: 'blue',
 };
 
 const SHIPS = {
@@ -25,7 +26,9 @@ const REDZONE = {
   v56: [56, 57, 58, 59, 60, 61, 62, 63],
 }
 
-const AIDIR = [-1, 1]
+const AIDIR = [-1, 1];
+const SHIPSINPLAY = 11;
+const HARDMODE = 1;
 
 
 /*----- app's state (variables) -----*/ 
@@ -47,17 +50,25 @@ let aiS4VConstraints = [];
 let aiSPlaced = 0;
 let sPlaced = 0;
 let dir = 1;
+let posFired = [];
+let aiPosFired = [];
+let hits = 0;
+let aiHits = 0;
+let aiMiss = true;
+let aiHardArr = [];
+let aiNextHit = null;
+let aiLastHit = null;
 
 /*----- cached element references -----*/ 
 
 
 /*----- event listeners -----*/
-document.querySelector('.container2').addEventListener('click', whenClick2);
-document.getElementById('btnS1').addEventListener('click', initS1);
-document.getElementById('btnS2').addEventListener('click', initS2);
-document.getElementById('btnS3').addEventListener('click', initS3);
-document.getElementById('btnS4').addEventListener('click', initS4);
-document.getElementById('btnRotate').addEventListener('click', rotate);
+document.getElementById('start-game').addEventListener('click', startGame);
+document.getElementById('btn-s1').addEventListener('click', initS1);
+document.getElementById('btn-s2').addEventListener('click', initS2);
+document.getElementById('btn-s3').addEventListener('click', initS3);
+document.getElementById('btn-s4').addEventListener('click', initS4);
+document.getElementById('btn-rotate').addEventListener('click', rotate);
 
 /*----- functions -----*/
 init();
@@ -104,7 +115,7 @@ function rng(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function aiRngDir(AIDIR) {
+function aiRng(AIDIR) {
   return AIDIR[Math.floor(Math.random() * AIDIR.length)];
 }
 
@@ -178,7 +189,7 @@ function addS1(evt) {
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS1);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS1);
       document.querySelector('.container').removeEventListener('click', addS1);
-      document.getElementById('btnS1').disabled = true;    
+      document.getElementById('btn-s1').disabled = true;    
       render();
     } else {
       console.log('spot taken');
@@ -210,7 +221,7 @@ function addS1(evt) {
     document.querySelector('.container').removeEventListener('mouseover', hvrOverS1);
     document.querySelector('.container').removeEventListener('mouseout', hvrOutS1);
     document.querySelector('.container').removeEventListener('click', addS1);
-    document.getElementById('btnS1').disabled = true;    
+    document.getElementById('btn-s1').disabled = true;    
     render();
   }
 }
@@ -295,7 +306,7 @@ function addS2(evt) {
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS2);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS2);
       document.querySelector('.container').removeEventListener('click', addS2);
-      document.getElementById('btnS2').disabled = true;    
+      document.getElementById('btn-s2').disabled = true;    
       render();
     } else {
       console.log('spot taken');
@@ -327,7 +338,7 @@ function addS2(evt) {
     document.querySelector('.container').removeEventListener('mouseover', hvrOverS2);
     document.querySelector('.container').removeEventListener('mouseout', hvrOutS2);
     document.querySelector('.container').removeEventListener('click', addS2);
-    document.getElementById('btnS2').disabled = true;    
+    document.getElementById('btn-s2').disabled = true;    
     render();
   }
 }
@@ -418,7 +429,7 @@ function addS3(evt) {
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS3);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS3);
       document.querySelector('.container').removeEventListener('click', addS3);
-      document.getElementById('btnS3').disabled = true;
+      document.getElementById('btn-s3').disabled = true;
       render();
     } else {
       console.log('spot taken');
@@ -447,7 +458,7 @@ function addS3(evt) {
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS3);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS3);
       document.querySelector('.container').removeEventListener('click', addS3);
-      document.getElementById('btnS3').disabled = true;
+      document.getElementById('btn-s3').disabled = true;
       render();
     } else {
       console.log('spot taken');
@@ -546,7 +557,7 @@ function addS4(evt) {
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS4);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS4);
       document.querySelector('.container').removeEventListener('click', addS4);
-      document.getElementById('btnS4').disabled = true;
+      document.getElementById('btn-s4').disabled = true;
       render();
     } else {
       console.log('spot taken');
@@ -569,7 +580,7 @@ function addS4(evt) {
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS4);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS4);
       document.querySelector('.container').removeEventListener('click', addS4);
-      document.getElementById('btnS4').disabled = true;
+      document.getElementById('btn-s4').disabled = true;
       render();
     } else {
       console.log('spot taken');
@@ -578,23 +589,16 @@ function addS4(evt) {
   }
 }
 
-function whenClick2(evt) {
-  let loc = parseInt(evt.target.id.replace('posb', ''));
-  board2[loc] = 1;
-  console.log(loc);
-  render();
-}
-
 function aiShip1() {
   let ship1Arr = new Array();
-  let aiDirection = aiRngDir(AIDIR);
+  let aiDirection = aiRng(AIDIR);
   console.log(`AI is going ` + aiDirection);
   if (aiDirection === 1) {
     for (var i = 0; i < 64; i++)
       if (!REDZONE.h7.includes(i)) {
         ship1Arr.push(i);
       }
-    let rngPos = aiRngDir(ship1Arr);
+    let rngPos = aiRng(ship1Arr);
     console.log(rngPos);
     SHIPS.ship1.forEach(function(p, i) {
       let aiTPos = rngPos + p;
@@ -612,7 +616,7 @@ function aiShip1() {
       if (!REDZONE.v56.includes(i)) {
         ship1Arr.push(i);
       }
-    let rngPos = aiRngDir(ship1Arr);
+    let rngPos = aiRng(ship1Arr);
     console.log(rngPos);
     SHIPS.ship1v.forEach(function(p, i) {
       let aiTPos = rngPos + p;
@@ -630,7 +634,7 @@ function aiShip1() {
 
 function aiShip2() {
   let ship2Arr = new Array();
-  let aiDirection = aiRngDir(AIDIR);
+  let aiDirection = aiRng(AIDIR);
   console.log(`AI ship 2 is going ` + aiDirection);
   if (aiDirection === 1) {
     for (var i = 0; i < 64; i++)
@@ -639,7 +643,7 @@ function aiShip2() {
         && !aiS2HConstraints.includes(i)) {
         ship2Arr.push(i);
       }
-    let rngPos = aiRngDir(ship2Arr);
+    let rngPos = aiRng(ship2Arr);
     console.log(rngPos);
     SHIPS.ship2.forEach(function(p, i) {
       let aiTPos = rngPos + p;
@@ -659,7 +663,7 @@ function aiShip2() {
         && !aiS2VConstraints.includes(i)) {
         ship2Arr.push(i);
       }
-    let rngPos = aiRngDir(ship2Arr);
+    let rngPos = aiRng(ship2Arr);
     console.log(rngPos);
     SHIPS.ship2v.forEach(function(p, i) {
       let aiTPos = rngPos + p;
@@ -677,7 +681,7 @@ function aiShip2() {
 
 function aiShip3() {
   let ship3Arr = new Array();
-  let aiDirection = aiRngDir(AIDIR);
+  let aiDirection = aiRng(AIDIR);
   console.log(`AI ship 3 is going ` + aiDirection);
   if (aiDirection === 1) {
     for (var i = 0; i < 64; i++)
@@ -688,7 +692,7 @@ function aiShip3() {
         && !aiS3HConstraints.includes(i)) {
         ship3Arr.push(i);
       }
-    let rngPos = aiRngDir(ship3Arr);
+    let rngPos = aiRng(ship3Arr);
     console.log(rngPos);
     SHIPS.ship3.forEach(function(p, i) {
       let aiTPos = rngPos + p;
@@ -712,7 +716,7 @@ function aiShip3() {
         && !aiS3VConstraints.includes(i)) {
         ship3Arr.push(i);
       }
-    let rngPos = aiRngDir(ship3Arr);
+    let rngPos = aiRng(ship3Arr);
     console.log(rngPos);
     SHIPS.ship3v.forEach(function(p, i) {
       let aiTPos = rngPos + p;
@@ -732,7 +736,7 @@ function aiShip3() {
 
 function aiShip4() {
   let ship4Arr = new Array();
-  let aiDirection = aiRngDir(AIDIR);
+  let aiDirection = aiRng(AIDIR);
   console.log(`AI ship 4 is going ` + aiDirection);
   if (aiDirection === 1) {
     for (var i = 0; i < 64; i++)
@@ -745,7 +749,7 @@ function aiShip4() {
         && !aiS4HConstraints.includes(i)) {
         ship4Arr.push(i);
       }
-    let rngPos = aiRngDir(ship4Arr);
+    let rngPos = aiRng(ship4Arr);
     console.log(rngPos);
     SHIPS.ship4.forEach(function(p, i) {
       let aiTPos = rngPos + p;
@@ -765,7 +769,7 @@ function aiShip4() {
         && !aiS3VConstraints.includes(i)) {
         ship4Arr.push(i);
       }
-    let rngPos = aiRngDir(ship4Arr);
+    let rngPos = aiRng(ship4Arr);
     console.log(rngPos);
     SHIPS.ship4v.forEach(function(p, i) {
       let aiTPos = rngPos + p;
@@ -782,8 +786,116 @@ setTimeout (aiShip2, 200);
 setTimeout (aiShip3, 300);
 setTimeout (aiShip4, 400);
 
+function startGame () {
+  if (sPlaced === SHIPSINPLAY) {
+    document.querySelector('.container2').addEventListener('click', pewPew);
+  } else {
+    console.log('place ships');
+    return;
+  }
+}
+
+function pewPew(evt) {
+  let target = parseInt(evt.target.id.replace('posb', ''));
+  if (aiShipPos.includes(target)) {
+    board2[target] = 2;
+    console.log('hit');
+    render();
+    return;
+  } else if (!aiShipPos.includes(target)) {
+    console.log('ai turn')
+    board2[target] = 3;
+    document.querySelector('.container2').removeEventListener('click', pewPew);
+    aiTurn = true;
+    aiShootMode();
+    render();
+  } else {
+    console.log('that spot has already been hit');
+    return;
+  }
+}
+
+function aiShootMode() {
+  if (HARDMODE === 0) {
+    aiPewPew();
+  }
+  if (aiMiss && HARDMODE === 1 ) {
+    aiPewPew();
+  }
+  if (!aiMiss && HARDMODE === 1) {
+    rngNextHit();
+  }
+}
+
+function rngNextHit() {
+  aiHardArr.push(aiLastHit - 8);
+  aiHardArr.push(aiLastHit + 1);
+  aiHardArr.push(aiLastHit + 8);
+  aiHardArr.push(aiLastHit - 1);
+  aiNextHit = aiRng(aiHardArr);
+  checkNextHit(aiNextHit);
+}
+
+function checkNextHit() {
+  if (!aiPosFired.includes(aiNextHit)) {
+    aiHardMode(aiNextHit);
+  }
+  if (aiPosFired.includes(aiNextHit)) {
+    rngNextHit();
+  }
+}
+
+function aiHardMode() {
+  if (shipPos.includes(aiNextHit)) {
+    board[aiNextHit] = 2;
+    aiHits++;
+    aiPosFired.push(aiNextHit);
+    aiLastHit = aiNextHit;
+    console.log('ai hit again');
+    console.log(aiNextHit);
+    rngNextHit();
+    render();
+  }
+  if (!shipPos.includes(aiNextHit)) {
+    console.log(aiNextHit);
+    console.log('ai miss next hit');
+    board[aiNextHit] = 3;
+    aiMiss = true;
+    document.querySelector('.container2').addEventListener('click', pewPew);
+    render();
+    return;
+  }
+}
+
+function aiPewPew() {
+  let aiPewArr = new Array();
+  for (var i = 0; i < 64; i++)
+    if (!aiPosFired.includes(i)) {
+       aiPewArr.push(i);
+    }
+    let rngFirePos = aiRng(aiPewArr); //random hit
+    if (shipPos.includes(rngFirePos)) { //did it hit / yes
+      board[rngFirePos] = 2;
+      aiHits++;
+      aiPosFired.push(rngFirePos);
+      aiLastHit = rngFirePos;
+      aiMiss = false;
+      aiShootMode();
+      console.log('ai hit');
+      console.log(rngFirePos);
+    } else {
+      console.log('ai miss');
+      board[rngFirePos] = 3;
+      aiPosFired.push(rngFirePos);
+      aiMiss = true;
+      document.querySelector('.container2').addEventListener('click', pewPew);
+      return;
+    }
+}
+
+
 // function aiShip1() {
-//   let aiDirection = aiRngDir(AIDIR);
+//   let aiDirection = aiRng(AIDIR);
 //   console.log(`AI is going ` + aiDirection);
 //   if (aiDirection === 1) {
 //     let rngPos = rng(0, 63);
