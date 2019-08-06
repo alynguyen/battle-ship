@@ -601,6 +601,8 @@ function aiShip1() {
       aiShipPos.push(aiTPos);
       aiS2HConstraints.push(aiTPos - 1);
       aiS2VConstraints.push(aiTPos - 8);
+      aiS3VConstraints.push(aiTPos - 16);
+      aiS3HConstraints.push(aiTPos - 2);
       board2[rngPos + p] = 1;
       aiSPlaced ++;
     });   
@@ -617,6 +619,8 @@ function aiShip1() {
       aiShipPos.push(aiTPos);
       aiS2HConstraints.push(aiTPos - 1);
       aiS2VConstraints.push(aiTPos - 8);
+      aiS3VConstraints.push(aiTPos - 16);
+      aiS3HConstraints.push(aiTPos - 2);
       board2[rngPos + p] = 1;
       aiSPlaced ++;
     }); 
@@ -642,6 +646,8 @@ function aiShip2() {
       aiShipPos.push(aiTPos);
       aiS3HConstraints.push(aiTPos - 1);
       aiS3VConstraints.push(aiTPos - 8);
+      aiS3VConstraints.push(aiTPos - 16);
+      aiS3HConstraints.push(aiTPos - 2);
       board2[rngPos + p] = 1;
       aiSPlaced ++;
     });   
@@ -649,7 +655,8 @@ function aiShip2() {
   if (aiDirection === -1) {
     for (var i = 0; i < 64; i++)
       if (!REDZONE.v56.includes(i)
-        && !aiShipPos.includes(i)) {
+        && !aiShipPos.includes(i)
+        && !aiS2VConstraints.includes(i)) {
         ship2Arr.push(i);
       }
     let rngPos = aiRngDir(ship2Arr);
@@ -659,6 +666,8 @@ function aiShip2() {
       aiShipPos.push(aiTPos);
       aiS3HConstraints.push(aiTPos - 1);
       aiS3VConstraints.push(aiTPos - 8);
+      aiS3VConstraints.push(aiTPos - 16);
+      aiS3HConstraints.push(aiTPos - 2);
       board2[rngPos + p] = 1;
       aiSPlaced ++;
     }); 
@@ -721,11 +730,57 @@ function aiShip3() {
   render();
 }
 
-aiShip1(); //maybe nexted functions to avoid collision
-aiShip2();
-aiShip3();
+function aiShip4() {
+  let ship4Arr = new Array();
+  let aiDirection = aiRngDir(AIDIR);
+  console.log(`AI ship 4 is going ` + aiDirection);
+  if (aiDirection === 1) {
+    for (var i = 0; i < 64; i++)
+      if (!REDZONE.h7.includes(i)
+        && !REDZONE.h6.includes(i)
+        && !REDZONE.h5.includes(i)
+        && !aiShipPos.includes(i)
+        && !aiS2HConstraints.includes(i)
+        && !aiS3HConstraints.includes(i)
+        && !aiS4HConstraints.includes(i)) {
+        ship4Arr.push(i);
+      }
+    let rngPos = aiRngDir(ship4Arr);
+    console.log(rngPos);
+    SHIPS.ship4.forEach(function(p, i) {
+      let aiTPos = rngPos + p;
+      aiShipPos.push(aiTPos);
+      board2[rngPos + p] = 1;
+      aiSPlaced ++;
+    });   
+  }
+  if (aiDirection === -1) {
+    for (var i = 0; i < 64; i++)
+      if (!REDZONE.v56.includes(i)
+        && !aiShipPos.includes(i)
+        && !REDZONE.v48.includes(i)
+        && !REDZONE.v40.includes(i)
+        && !aiS4VConstraints.includes(i)
+        && !aiS2VConstraints.includes(i)
+        && !aiS3VConstraints.includes(i)) {
+        ship4Arr.push(i);
+      }
+    let rngPos = aiRngDir(ship4Arr);
+    console.log(rngPos);
+    SHIPS.ship4v.forEach(function(p, i) {
+      let aiTPos = rngPos + p;
+      aiShipPos.push(aiTPos);
+      board2[rngPos + p] = 1;
+      aiSPlaced ++;
+    }); 
+  }
+  render();
+}
 
-
+setTimeout (aiShip1, 100);
+setTimeout (aiShip2, 200);
+setTimeout (aiShip3, 300);
+setTimeout (aiShip4, 400);
 
 // function aiShip1() {
 //   let aiDirection = aiRngDir(AIDIR);
