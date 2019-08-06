@@ -38,8 +38,12 @@ let s4VConstraints = [];
 let s4HConstraints = [];
 let s2VConstraints = [];
 let s2HConstraints = [];
-let aiS2VConstraints = [];
 let aiS2HConstraints = [];
+let aiS2VConstraints = [];
+let aiS3HConstraints = [];
+let aiS3VConstraints = [];
+let aiS4HConstraints = [];
+let aiS4VConstraints = [];
 let aiSPlaced = 0;
 let sPlaced = 0;
 let dir = 1;
@@ -620,6 +624,108 @@ function aiShip1() {
   render();
 }
 
+function aiShip2() {
+  let ship2Arr = new Array();
+  let aiDirection = aiRngDir(AIDIR);
+  console.log(`AI ship 2 is going ` + aiDirection);
+  if (aiDirection === 1) {
+    for (var i = 0; i < 64; i++)
+      if (!REDZONE.h7.includes(i)
+        && !aiShipPos.includes(i)
+        && !aiS2HConstraints.includes(i)) {
+        ship2Arr.push(i);
+      }
+    let rngPos = aiRngDir(ship2Arr);
+    console.log(rngPos);
+    SHIPS.ship2.forEach(function(p, i) {
+      let aiTPos = rngPos + p;
+      aiShipPos.push(aiTPos);
+      aiS3HConstraints.push(aiTPos - 1);
+      aiS3VConstraints.push(aiTPos - 8);
+      board2[rngPos + p] = 1;
+      aiSPlaced ++;
+    });   
+  }
+  if (aiDirection === -1) {
+    for (var i = 0; i < 64; i++)
+      if (!REDZONE.v56.includes(i)
+        && !aiShipPos.includes(i)) {
+        ship2Arr.push(i);
+      }
+    let rngPos = aiRngDir(ship2Arr);
+    console.log(rngPos);
+    SHIPS.ship2v.forEach(function(p, i) {
+      let aiTPos = rngPos + p;
+      aiShipPos.push(aiTPos);
+      aiS3HConstraints.push(aiTPos - 1);
+      aiS3VConstraints.push(aiTPos - 8);
+      board2[rngPos + p] = 1;
+      aiSPlaced ++;
+    }); 
+  }
+  render();
+}
+
+function aiShip3() {
+  let ship3Arr = new Array();
+  let aiDirection = aiRngDir(AIDIR);
+  console.log(`AI ship 3 is going ` + aiDirection);
+  if (aiDirection === 1) {
+    for (var i = 0; i < 64; i++)
+      if (!REDZONE.h7.includes(i)
+        && !REDZONE.h6.includes(i)
+        && !aiShipPos.includes(i)
+        && !aiS2HConstraints.includes(i)
+        && !aiS3HConstraints.includes(i)) {
+        ship3Arr.push(i);
+      }
+    let rngPos = aiRngDir(ship3Arr);
+    console.log(rngPos);
+    SHIPS.ship3.forEach(function(p, i) {
+      let aiTPos = rngPos + p;
+      aiShipPos.push(aiTPos);
+      aiS3HConstraints.push(aiTPos - 1);
+      aiS3VConstraints.push(aiTPos - 8);
+      aiS4HConstraints.push(aiTPos - 2);
+      aiS4HConstraints.push(aiTPos - 3);
+      aiS4VConstraints.push(aiTPos - 16);
+      aiS4VConstraints.push(aiTPos - 24);
+      board2[rngPos + p] = 1;
+      aiSPlaced ++;
+    });   
+  }
+  if (aiDirection === -1) {
+    for (var i = 0; i < 64; i++)
+      if (!REDZONE.v56.includes(i)
+        && !aiShipPos.includes(i)
+        && !REDZONE.v48.includes(i)
+        && !aiS2VConstraints.includes(i)
+        && !aiS3VConstraints.includes(i)) {
+        ship3Arr.push(i);
+      }
+    let rngPos = aiRngDir(ship3Arr);
+    console.log(rngPos);
+    SHIPS.ship3v.forEach(function(p, i) {
+      let aiTPos = rngPos + p;
+      aiShipPos.push(aiTPos);
+      aiS3HConstraints.push(aiTPos - 1);
+      aiS3VConstraints.push(aiTPos - 8);
+      aiS4HConstraints.push(aiTPos - 2);
+      aiS4HConstraints.push(aiTPos - 3);
+      aiS4VConstraints.push(aiTPos - 16);
+      aiS4VConstraints.push(aiTPos - 24);
+      board2[rngPos + p] = 1;
+      aiSPlaced ++;
+    }); 
+  }
+  render();
+}
+
+aiShip1(); //maybe nexted functions to avoid collision
+aiShip2();
+aiShip3();
+
+
 
 // function aiShip1() {
 //   let aiDirection = aiRngDir(AIDIR);
@@ -659,7 +765,6 @@ function aiShip1() {
 //   render();
 // }
 
-aiShip1();
 
 // function addShip3(pos) {
 //   SHIPS.ship3.forEach(function(p, i) {
