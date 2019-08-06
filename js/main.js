@@ -26,9 +26,16 @@ const REDZONE = {
   v56: [56, 57, 58, 59, 60, 61, 62, 63],
 }
 
+const AIBORDERS = {
+  r0: [0, 1 , 2 , 3, 4, 5, 6, 7],
+  r56: [56, 57, 58, 59, 60, 61, 62, 63],
+  c7: [7, 15, 23, 31, 39, 47, 55, 63],
+  c0: [0, 8, 16, 24, 32, 40, 48, 56]
+}
+
 const AIDIR = [-1, 1];
 const SHIPSINPLAY = 11;
-const HARDMODE = 1;
+const HARDMODE = 0;
 
 
 /*----- app's state (variables) -----*/ 
@@ -58,6 +65,7 @@ let aiMiss = true;
 let aiHardArr = [];
 let aiNextHit = null;
 let aiLastHit = null;
+let aiHitAgain = false;
 
 /*----- cached element references -----*/ 
 
@@ -797,22 +805,24 @@ function startGame () {
 
 function pewPew(evt) {
   let target = parseInt(evt.target.id.replace('posb', ''));
-  if (aiShipPos.includes(target)) {
-    board2[target] = 2;
-    console.log('hit');
-    render();
-    return;
-  } else if (!aiShipPos.includes(target)) {
-    console.log('ai turn')
-    board2[target] = 3;
-    document.querySelector('.container2').removeEventListener('click', pewPew);
-    aiTurn = true;
-    aiShootMode();
-    render();
-  } else {
+    if (!posFired.includes(target) && aiShipPos.includes(target)) {
+      board2[target] = 2;
+      console.log('hit');
+      posFired.push(target);
+      render();
+      return;
+    } else if (!posFired.includes(target) && !aiShipPos.includes(target)) {
+      console.log('ai turn')
+      board2[target] = 3;
+      document.querySelector('.container2').removeEventListener('click', pewPew);
+      aiTurn = true;
+      posFired.push(target);
+      aiShootMode();
+      render();
+    } else if (posFired.includes(target)) {
     console.log('that spot has already been hit');
     return;
-  }
+    }
 }
 
 function aiShootMode() {
@@ -822,27 +832,110 @@ function aiShootMode() {
   if (aiMiss && HARDMODE === 1 ) {
     aiPewPew();
   }
+  if (aiMiss && HARDMODE === 1 && aiHitAgain) {
+    rngNextHitAgain();
+  }
   if (!aiMiss && HARDMODE === 1) {
     rngNextHit();
   }
 }
 
 function rngNextHit() {
-  aiHardArr.push(aiLastHit - 8);
-  aiHardArr.push(aiLastHit + 1);
-  aiHardArr.push(aiLastHit + 8);
-  aiHardArr.push(aiLastHit - 1);
-  aiNextHit = aiRng(aiHardArr);
-  checkNextHit(aiNextHit);
+  aiHardArr = [];
+  if (AIBORDERS.r0.includes(aiLastHit)
+    && aiLastHit !== 0
+    && aiLastHit !== 7) {
+    aiHardArr.push(aiLastHit - 1);
+    aiHardArr.push(aiLastHit + 1);
+    aiHardArr.push(aiLastHit + 8);
+    aiNextHit = aiRng(aiHardArr);
+    checkNextHit(aiNextHit);
+  }
+  if (AIBORDERS.r56.includes(aiLastHit)
+    && aiLastHit !== 56
+    && aiLastHit !== 63) {
+    aiHardArr.push(aiLastHit - 8);
+    aiHardArr.push(aiLastHit + 1);
+    aiHardArr.push(aiLastHit - 1);
+    aiNextHit = aiRng(aiHardArr);
+    checkNextHit(aiNextHit);
+  }
+  if (AIBORDERS.c0.includes(aiLastHit) 
+    && aiLastHit !== 0
+    && aiLastHit !== 56) {
+    aiHardArr.push(aiLastHit - 8);
+    aiHardArr.push(aiLastHit + 1);
+    aiHardArr.push(aiLastHit + 8);
+    aiNextHit = aiRng(aiHardArr);
+    checkNextHit(aiNextHit);
+    }
+  if (AIBORDERS.c7.includes(aiLastHit)
+    && aiLastHit !== 7
+    && aiLastHit !== 63) {
+    aiHardArr.push(aiLastHit - 8);
+    aiHardArr.push(aiLastHit + 8);
+    aiHardArr.push(aiLastHit - 1);
+    aiNextHit = aiRng(aiHardArr);
+    checkNextHit(aiNextHit);
+    }
+  if (aiLastHit === 0) {
+    aiHardArr.push(aiLastHit + 8);
+    aiHardArr.push(aiLastHit + 1);
+    aiNextHit = aiRng(aiHardArr);
+    checkNextHit(aiNextHit);
+  }
+  if (aiLastHit === 7) {
+    aiHardArr.push(aiLastHit - 1);
+    aiHardArr.push(aiLastHit + 8);
+    aiNextHit = aiRng(aiHardArr);
+    checkNextHit(aiNextHit);
+  }
+  if (aiLastHit === 56) {
+    aiHardArr.push(aiLastHit - 8);
+    aiHardArr.push(aiLastHit + 1);
+    aiNextHit = aiRng(aiHardArr);
+    checkNextHit(aiNextHit);
+  }
+  if (aiLastHit === 63) {
+    aiHardArr.push(aiLastHit - 1);
+    aiHardArr.push(aiLastHit - 8);
+    aiNextHit = aiRng(aiHardArr);
+    checkNextHit(aiNextHit);
+  }
+  if (!AIBORDERS.r0.includes(aiLastHit)
+    && !AIBORDERS.r56.includes(aiLastHit)
+    && !AIBORDERS.c0.includes(aiLastHit)
+    && !AIBORDERS.c7.includes(aiLastHit)) {
+    aiHardArr.push(aiLastHit - 1);
+    aiHardArr.push(aiLastHit + 1);
+    aiHardArr.push(aiLastHit - 8);
+    aiHardArr.push(aiLastHit + 8);
+    aiNextHit = aiRng(aiHardArr);
+    checkNextHit(aiNextHit);
+  }
 }
 
 function checkNextHit() {
   if (!aiPosFired.includes(aiNextHit)) {
     aiHardMode(aiNextHit);
+    console.log('did not include > hard mode');
   }
-  if (aiPosFired.includes(aiNextHit)) {
-    rngNextHit();
+  else if (aiPosFired.includes(aiNextHit)) {
+    rngNextHitAgain();
+    console.log('included hitting again');
+  } else {
+    console.log('else statement')
+    aiHitAgain = false;
+    aiShootMode();
   }
+  //something here when all spots are taken
+  //nexthit false
+}
+
+function rngNextHitAgain() {
+  aiNextHit = aiRng(aiHardArr);
+  checkNextHit(aiNextHit);
+  console.log('rngNextHitAgain');
 }
 
 function aiHardMode() {
@@ -861,6 +954,7 @@ function aiHardMode() {
     console.log('ai miss next hit');
     board[aiNextHit] = 3;
     aiMiss = true;
+    aiHitAgain = true;
     document.querySelector('.container2').addEventListener('click', pewPew);
     render();
     return;
@@ -880,9 +974,9 @@ function aiPewPew() {
       aiPosFired.push(rngFirePos);
       aiLastHit = rngFirePos;
       aiMiss = false;
-      aiShootMode();
       console.log('ai hit');
       console.log(rngFirePos);
+      aiShootMode();
     } else {
       console.log('ai miss');
       board[rngFirePos] = 3;
