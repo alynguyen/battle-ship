@@ -14,31 +14,31 @@
     BATTLESHIP
   </header>
   <section class="container">
-    <div class="board1" id="pos0">0</div>
-    <div class="board1" id="pos1">1</div>
-    <div class="board1" id="pos2">2</div>
-    <div class="board1" id="pos3">3</div>
-    <div class="board1" id="pos4">4</div>
-    <div class="board1" id="pos5">5</div>
-    <div class="board1" id="pos6">6</div>
-    <div class="board1" id="pos7">7</div>
-    <div class="board1" id="pos8">8</div>
+    <div class="board1" id="pos0"></div>
+    <div class="board1" id="pos1"></div>
+    <div class="board1" id="pos2"></div>
+    <div class="board1" id="pos3"></div>
+    <div class="board1" id="pos4"></div>
+    <div class="board1" id="pos5"></div>
+    <div class="board1" id="pos6"></div>
+    <div class="board1" id="pos7"></div>
+    <div class="board1" id="pos8"></div>
     <div class="board1" id="pos9"></div>
     <div class="board1" id="pos10"></div>
     <div class="board1" id="pos11"></div>
     <div class="board1" id="pos12"></div>
     <div class="board1" id="pos13"></div>
-    <div class="board1" id="pos14">14</div>
-    <div class="board1" id="pos15">15</div>
-    <div class="board1" id="pos16">16</div>
+    <div class="board1" id="pos14"></div>
+    <div class="board1" id="pos15"></div>
+    <div class="board1" id="pos16"></div>
     <div class="board1" id="pos17"></div>
     <div class="board1" id="pos18"></div>
     <div class="board1" id="pos19"></div>
     <div class="board1" id="pos20"></div>
     <div class="board1" id="pos21"></div>
     <div class="board1" id="pos22"></div>
-    <div class="board1" id="pos23">23</div>
-    <div class="board1" id="pos24">24</div>
+    <div class="board1" id="pos23"></div>
+    <div class="board1" id="pos24"></div>
     <div class="board1" id="pos25"></div>
     <div class="board1" id="pos26"></div>
     <div class="board1" id="pos27"></div>
@@ -46,7 +46,7 @@
     <div class="board1" id="pos29"></div>
     <div class="board1" id="pos30"></div>
     <div class="board1" id="pos31"></div>
-    <div class="board1" id="pos32">32</div>
+    <div class="board1" id="pos32"></div>
     <div class="board1" id="pos33"></div>
     <div class="board1" id="pos34"></div>
     <div class="board1" id="pos35"></div>
@@ -54,7 +54,7 @@
     <div class="board1" id="pos37"></div>
     <div class="board1" id="pos38"></div>
     <div class="board1" id="pos39"></div>
-    <div class="board1" id="pos40">40</div>
+    <div class="board1" id="pos40"></div>
     <div class="board1" id="pos41"></div>
     <div class="board1" id="pos42"></div>
     <div class="board1" id="pos43"></div>
@@ -62,7 +62,7 @@
     <div class="board1" id="pos45"></div>
     <div class="board1" id="pos46"></div>
     <div class="board1" id="pos47"></div>
-    <div class="board1" id="pos48">48</div>
+    <div class="board1" id="pos48"></div>
     <div class="board1" id="pos49"></div>
     <div class="board1" id="pos50"></div>
     <div class="board1" id="pos51"></div>
@@ -70,14 +70,14 @@
     <div class="board1" id="pos53"></div>
     <div class="board1" id="pos54"></div>
     <div class="board1" id="pos55"></div>
-    <div class="board1" id="pos56">56</div>
+    <div class="board1" id="pos56"></div>
     <div class="board1" id="pos57"></div>
     <div class="board1" id="pos58"></div>
     <div class="board1" id="pos59"></div>
     <div class="board1" id="pos60"></div>
     <div class="board1" id="pos61"></div>
     <div class="board1" id="pos62"></div>
-    <div class="board1" id="pos63">63</div>
+    <div class="board1" id="pos63"></div>
   </section>
   <section class="container2">
     <div class="board2" id="posb0"></div>
@@ -87,7 +87,7 @@
     <div class="board2" id="posb4"></div>
     <div class="board2" id="posb5"></div>
     <div class="board2" id="posb6"></div>
-    <div class="board2" id="posb7">75</div>
+    <div class="board2" id="posb7"></div>
     <div class="board2" id="posb8"></div>
     <div class="board2" id="posb9"></div>
     <div class="board2" id="posb10"></div>
@@ -103,7 +103,7 @@
     <div class="board2" id="posb20"></div>
     <div class="board2" id="posb21"></div>
     <div class="board2" id="posb22"></div>
-    <div class="board2" id="posb23">23</div>
+    <div class="board2" id="posb23"></div>
     <div class="board2" id="posb24"></div>
     <div class="board2" id="posb25"></div>
     <div class="board2" id="posb26"></div>
@@ -143,18 +143,41 @@
     <div class="board2" id="posb60"></div>
     <div class="board2" id="posb61"></div>
     <div class="board2" id="posb62"></div>
-    <div class="board2" id="posb63">63</div>
+    <div class="board2" id="posb63"></div>
   </section>
   <section class="leftside">
-    <button id="btn-s1">Ship1</button>
-    <button id="btn-s2">Ship2</button>
-    <button id="btn-s3">Ship3</button>
-    <button id="btn-s4">Ship4</button>
+    <div class="text-box" id="p-stats">
+      <h3>Player Stats</h3>
+      <h1 id="h1-hits"></h1>
+      <h5>Ships Hit<h5>
+      <p class="stats">
+         Shots Fired: <span id="s-shots-fired">S</span><br><br>
+         Accuracy: %<span id="s-acc"></span><br><br>
+         Remaining Ships: <span id="s-rships"></span><br><br>
+      </p>
+      <p id="p-msg"></p>
+    </div>
+    <button id="btn-s1">Ship 1</button>
+    <button id="btn-s2">Ship 2</button>
+    <button id="btn-s3">Ship 3</button>
+    <button id="btn-s4">Ship 4</button>
     <button id="btn-rotate">Rotate</button>
+    <button id="btn-reset">Reset</button>
   </section>
   <section class ="rightside">
-    <div class ="text-box">
-      Game Instructions:
+    <div class="text-box" id="ai-stats">
+          <h3>AI Stats</h3>
+          <h1 id="h1-ai-hits"></h1>
+          <h5>Ships Hit<h5>
+          <p class="stats">
+             Shots Fired: <span id="s-ai-shots-fired">S</span><br><br>
+             Accuracy: %<span id="s-ai-acc"></span><br><br>
+             Remaining Ships: <span id="s-ai-rships"></span><br><br>
+          </p>
+          <p id="ai-msg"></p>
+        </div>
+    <div class ="text-box" id="tb-ai">
+      <p>Game Instructions:
       <br>
       <br>- Place ships on top board and click start game.
       <br>
@@ -163,6 +186,8 @@
       <br>- If player hits ship, player will get another turn.
       <br>
       <br>- Hit all ships to win game.
+      <br>
+      </p>
     </div>
     <button id="start-game">Start Game</button>
   </section>

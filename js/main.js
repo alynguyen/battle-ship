@@ -1,10 +1,20 @@
  
-/*----- constants -----*/ 
+ /*----- constants -----*/ 
 const BOARDST = {
   0: 'grey',
   1: 'black',
   2: 'red',
   3: 'blue',
+};
+
+const SHIPGX = {
+  0: '',
+  1: '<img class="img-pir" src="img/pirate.png">',
+  2: '<img class="img-pir2" src="img/pirate2.png">',
+  3: '<img class="img-boat" src="img/boat.png">',
+  4: '<img class="img-ship" src="img/ship.gif">',
+  5: '<img class="img-fire" src="img/fire.gif">',
+  6: '<img class="img-miss" src="">',
 };
 
 const SHIPS = {
@@ -44,6 +54,8 @@ let splash = new Audio();
 splash.src = "audio/splash.wav";
 let select = new Audio();
 select.src = "audio/select.wav";
+let startsnd = new Audio();
+startsnd.src = "audio/gamestart.wav";
 
 
 /*----- app's state (variables) -----*/ 
@@ -74,9 +86,39 @@ let aiHardArr = [];
 let aiNextHit = null;
 let aiLastHit = null;
 let aiHitAgain = false;
+let shotsFired = 0;
+let aiShotsFired = 0;
 
 /*----- cached element references -----*/ 
+let rmvB1 = document.getElementById('btn-s1');
+let rmvB2 = document.getElementById('btn-s2');
+let rmvB3 = document.getElementById('btn-s3');
+let rmvB4 = document.getElementById('btn-s4');
+let rmvBR = document.getElementById('btn-rotate');
+let pTextBox = document.getElementById('p-stats');
+let pHitsMsg = document.getElementById('h1-hits');
+let pShotsFiredMsg = document.getElementById('s-shots-fired');
+let pAcc = document.getElementById('s-acc');
+let pRShips = document.getElementById('s-rships');
+let pMsg = document.getElementById('p-msg');
+let aiMsg = document.getElementById('ai-msg');
+let aiTextBox = document.getElementById('ai-stats');
+let aiShotsFiredMsg = document.getElementById('s-ai-shots-fired');
+let aiAcc = document.getElementById('s-ai-acc');
+let aiRShips = document.getElementById('s-ai-rships');
+let aiHitsMsg = document.getElementById('h1-ai-hits');
+let instrBox = document.getElementById('tb-ai');
 
+function updateStats() {
+  pHitsMsg.innerHTML = `${hits}`;
+  pShotsFiredMsg.innerHTML = `${shotsFired}`;
+  pAcc.innerHTML = `${hits / shotsFired * 100}`;
+  pRShips.innerHTML = `${aiHits - sPlaced * -1}`;
+  aiHitsMsg.innerHTML = `${aiHits}`;
+  aiShotsFiredMsg.innerHTML = `${aiShotsFired}`;
+  aiAcc.innerHTML = `${aiHits / aiShotsFired * 100}`;
+  aiRShips.innerHTML = `${hits - aiSPlaced * -1}`;
+}
 
 /*----- event listeners -----*/
 document.getElementById('start-game').addEventListener('click', startGame);
@@ -124,6 +166,7 @@ function render() {
 }
 
 function rotate() {
+  select.play();
   dir *= -1;
 }
 
@@ -145,6 +188,7 @@ function initS1(){
 function checkWinner() {
   if (hits === aiSPlaced) {
     console.log('Player Wins');
+    document.querySelector('.container2').removeEventListener('click', pewPew);
   }
   if (aiHits === sPlaced) {
     console.log('AI wins');
@@ -157,7 +201,7 @@ function hvrOverS1(evt) {
     if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos)) {
       SHIPS.ship1.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
       });
     };
   };
@@ -165,7 +209,7 @@ function hvrOverS1(evt) {
     if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos)) {
       SHIPS.ship1v.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
       })
     };
   };
@@ -212,6 +256,7 @@ function addS1(evt) {
         board[pos + p] = 1;
         sPlaced ++;
       });
+      select.play();
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS1);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS1);
       document.querySelector('.container').removeEventListener('click', addS1);
@@ -268,7 +313,7 @@ function hvrOverS2(evt) {
       && !s2HConstraints.includes(pos)) {
       SHIPS.ship2.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
       });
     };
   };
@@ -278,7 +323,7 @@ function hvrOverS2(evt) {
       && !s2VConstraints.includes(pos)) {
       SHIPS.ship2v.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
       })
     };
   };
@@ -330,6 +375,7 @@ function addS2(evt) {
         board[pos + p] = 1;
         sPlaced ++;
       });
+      select.play();
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS2);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS2);
       document.querySelector('.container').removeEventListener('click', addS2);
@@ -362,6 +408,7 @@ function addS2(evt) {
       console.log('spot taken');
       return;
     }
+    select.play();
     document.querySelector('.container').removeEventListener('mouseover', hvrOverS2);
     document.querySelector('.container').removeEventListener('mouseout', hvrOutS2);
     document.querySelector('.container').removeEventListener('click', addS2);
@@ -386,7 +433,7 @@ function hvrOverS3(evt) {
       && !hConstraints.includes(pos)) {
       SHIPS.ship3.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
         console.log(tpos);
       });
     };
@@ -399,7 +446,7 @@ function hvrOverS3(evt) {
       && !vConstraints.includes(pos)) {
       SHIPS.ship3v.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
         console.log(tpos);
       });
     };
@@ -454,6 +501,7 @@ function addS3(evt) {
         board[pos + p] = 1;
         sPlaced ++;
       });
+      select.play();
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS3);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS3);
       document.querySelector('.container').removeEventListener('click', addS3);
@@ -483,6 +531,7 @@ function addS3(evt) {
         board[pos + p] = 1;
         sPlaced ++;
       });
+      select.play();
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS3);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS3);
       document.querySelector('.container').removeEventListener('click', addS3);
@@ -513,7 +562,7 @@ function hvrOverS4(evt) {
       && !s4HConstraints.includes(pos)) {
       SHIPS.ship4.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
         console.log(tpos);
       });
     };
@@ -528,7 +577,7 @@ function hvrOverS4(evt) {
       && !s4VConstraints.includes(pos)) {
       SHIPS.ship4v.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
         console.log(tpos);
       });
     };
@@ -583,6 +632,7 @@ function addS4(evt) {
         board[pos + p] = 1;
         sPlaced ++;
       });
+      select.play();
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS4);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS4);
       document.querySelector('.container').removeEventListener('click', addS4);
@@ -606,6 +656,7 @@ function addS4(evt) {
         board[pos + p] = 1;
         sPlaced ++;
       });
+      select.play()
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS4);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS4);
       document.querySelector('.container').removeEventListener('click', addS4);
@@ -816,14 +867,23 @@ setTimeout (aiShip3, 300);
 setTimeout (aiShip4, 400);
 
 function startGame () {
-  select.play();
+  startsnd.play();
   if (sPlaced === SHIPSINPLAY) {
     document.querySelector('.container2').addEventListener('click', pewPew);
-  } else {
+    rmvB2.remove();
+    rmvB1.remove();
+    rmvB3.remove();
+    rmvB4.remove();
+    rmvBR.remove();
+    instrBox.remove();
+    aiTextBox.style.display = 'block';
+    pTextBox.style.display = 'block';
     console.log('place ships');
     return;
   }
 }
+
+
 
 function pewPew(evt) {
   let target = parseInt(evt.target.id.replace('posb', ''));
@@ -833,8 +893,10 @@ function pewPew(evt) {
       posFired.push(target);
       hits++;
       explode.play();
+      shotsFired++;
       render();
       checkWinner();
+      updateStats();
       return;
     } else if (!posFired.includes(target) && !aiShipPos.includes(target)) {
       console.log('ai turn')
@@ -842,8 +904,10 @@ function pewPew(evt) {
       document.querySelector('.container2').removeEventListener('click', pewPew);
       aiTurn = true;
       posFired.push(target);
+      shotsFired++;
       splash.play();
       aiShootMode();
+      updateStats();
       render();
     } else if (posFired.includes(target)) {
     console.log('that spot has already been hit');
@@ -939,7 +1003,7 @@ function rngNextHit() {
     aiNextHit = aiRng(aiHardArr);
     checkNextHit(aiNextHit);
   }
-}
+}//console log else to test if is valid
 
 function checkNextHit() {
   if (!aiPosFired.includes(aiNextHit)) {
@@ -970,6 +1034,7 @@ function aiHardMode() {
     aiHits++;
     aiPosFired.push(aiNextHit);
     aiLastHit = aiNextHit;
+    aiShotsFired++;
     console.log('ai hit again');
     console.log(aiNextHit);
     rngNextHit();
@@ -979,6 +1044,7 @@ function aiHardMode() {
     console.log(aiNextHit);
     console.log('ai miss next hit');
     board[aiNextHit] = 3;
+    aiShotsFired++;
     aiMiss = true;
     aiHitAgain = true;
     document.querySelector('.container2').addEventListener('click', pewPew);
@@ -1002,13 +1068,17 @@ function aiPewPew() {
       aiMiss = false;
       console.log('ai hit');
       console.log(rngFirePos);
+      aiShotsFired++;
       aiShootMode();
       checkWinner();
+      updateStats();
     } else {
       console.log('ai miss');
       board[rngFirePos] = 3;
       aiPosFired.push(rngFirePos);
       aiMiss = true;
+      aiShotsFired++;
+      updateStats();
       document.querySelector('.container2').addEventListener('click', pewPew);
       return;
     }

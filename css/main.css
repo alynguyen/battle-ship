@@ -90,8 +90,13 @@ div.text-box {
   letter-spacing: 1px;
   height: 400px;
   width: 300px;
-  margin-bottom: 15px;
+  margin: auto;
 }
+
+#p-stats, #ai-stats {
+  display: none;
+}
+
 
 img.img-pir {
   height: 100%;

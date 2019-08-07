@@ -1,4 +1,5 @@
-/*----- constants -----*/ 
+ 
+ /*----- constants -----*/ 
 const BOARDST = {
   0: 'grey',
   1: 'black',
@@ -130,8 +131,7 @@ function render() {
   });
   board2.forEach(function(sqr2, idx2){
     let squares2 = document.getElementById(`posb${idx2}`);
-    // squares2.style.backgroundColor = BOARDST[sqr2];
-    squares2.innerHTML = SHIPGX[sqr2];
+    squares2.style.backgroundColor = BOARDST[sqr2];
   });
 }
 
@@ -158,6 +158,7 @@ function initS1(){
 function checkWinner() {
   if (hits === aiSPlaced) {
     console.log('Player Wins');
+    document.querySelector('.container2').removeEventListener('click', pewPew);
   }
   if (aiHits === sPlaced) {
     console.log('AI wins');
@@ -170,7 +171,7 @@ function hvrOverS1(evt) {
     if (!shipPos.includes(pos) && !REDZONE.h7.includes(pos)) {
       SHIPS.ship1.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
       });
     };
   };
@@ -178,7 +179,7 @@ function hvrOverS1(evt) {
     if (!shipPos.includes(pos) && !REDZONE.v56.includes(pos)) {
       SHIPS.ship1v.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
       })
     };
   };
@@ -282,7 +283,7 @@ function hvrOverS2(evt) {
       && !s2HConstraints.includes(pos)) {
       SHIPS.ship2.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
       });
     };
   };
@@ -292,7 +293,7 @@ function hvrOverS2(evt) {
       && !s2VConstraints.includes(pos)) {
       SHIPS.ship2v.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
       })
     };
   };
@@ -377,6 +378,7 @@ function addS2(evt) {
       console.log('spot taken');
       return;
     }
+    select.play();
     document.querySelector('.container').removeEventListener('mouseover', hvrOverS2);
     document.querySelector('.container').removeEventListener('mouseout', hvrOutS2);
     document.querySelector('.container').removeEventListener('click', addS2);
@@ -401,7 +403,7 @@ function hvrOverS3(evt) {
       && !hConstraints.includes(pos)) {
       SHIPS.ship3.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
         console.log(tpos);
       });
     };
@@ -414,7 +416,7 @@ function hvrOverS3(evt) {
       && !vConstraints.includes(pos)) {
       SHIPS.ship3v.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
         console.log(tpos);
       });
     };
@@ -499,6 +501,7 @@ function addS3(evt) {
         board[pos + p] = 1;
         sPlaced ++;
       });
+      select.play();
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS3);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS3);
       document.querySelector('.container').removeEventListener('click', addS3);
@@ -529,7 +532,7 @@ function hvrOverS4(evt) {
       && !s4HConstraints.includes(pos)) {
       SHIPS.ship4.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
         console.log(tpos);
       });
     };
@@ -544,7 +547,7 @@ function hvrOverS4(evt) {
       && !s4VConstraints.includes(pos)) {
       SHIPS.ship4v.forEach(function(p, i) {
         let tpos = pos + p;
-        board[pos + p] = 2;
+        board[pos + p] = 3;
         console.log(tpos);
       });
     };
@@ -623,6 +626,7 @@ function addS4(evt) {
         board[pos + p] = 1;
         sPlaced ++;
       });
+      select.play()
       document.querySelector('.container').removeEventListener('mouseover', hvrOverS4);
       document.querySelector('.container').removeEventListener('mouseout', hvrOutS4);
       document.querySelector('.container').removeEventListener('click', addS4);
@@ -698,7 +702,7 @@ function aiShip2() {
       aiS3VConstraints.push(aiTPos - 8);
       aiS3VConstraints.push(aiTPos - 16);
       aiS3HConstraints.push(aiTPos - 2);
-      board2[rngPos + p] = 2;
+      board2[rngPos + p] = 1;
       aiSPlaced ++;
     });   
   }
@@ -718,7 +722,7 @@ function aiShip2() {
       aiS3VConstraints.push(aiTPos - 8);
       aiS3VConstraints.push(aiTPos - 16);
       aiS3HConstraints.push(aiTPos - 2);
-      board2[rngPos + p] = 2;
+      board2[rngPos + p] = 1;
       aiSPlaced ++;
     }); 
   }
@@ -749,7 +753,7 @@ function aiShip3() {
       aiS4HConstraints.push(aiTPos - 3);
       aiS4VConstraints.push(aiTPos - 16);
       aiS4VConstraints.push(aiTPos - 24);
-      board2[rngPos + p] = 3;
+      board2[rngPos + p] = 1;
       aiSPlaced ++;
     });   
   }
@@ -773,7 +777,7 @@ function aiShip3() {
       aiS4HConstraints.push(aiTPos - 3);
       aiS4VConstraints.push(aiTPos - 16);
       aiS4VConstraints.push(aiTPos - 24);
-      board2[rngPos + p] = 3;
+      board2[rngPos + p] = 1;
       aiSPlaced ++;
     }); 
   }
@@ -800,7 +804,7 @@ function aiShip4() {
     SHIPS.ship4.forEach(function(p, i) {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
-      board2[rngPos + p] = 4;
+      board2[rngPos + p] = 1;
       aiSPlaced ++;
     });   
   }
@@ -820,7 +824,7 @@ function aiShip4() {
     SHIPS.ship4v.forEach(function(p, i) {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
-      board2[rngPos + p] = 4;
+      board2[rngPos + p] = 1;
       aiSPlaced ++;
     }); 
   }
@@ -845,7 +849,7 @@ function startGame () {
 function pewPew(evt) {
   let target = parseInt(evt.target.id.replace('posb', ''));
     if (!posFired.includes(target) && aiShipPos.includes(target)) {
-      board2[target] = 1;
+      board2[target] = 2;
       console.log('hit');
       posFired.push(target);
       hits++;
@@ -855,7 +859,7 @@ function pewPew(evt) {
       return;
     } else if (!posFired.includes(target) && !aiShipPos.includes(target)) {
       console.log('ai turn')
-      board2[target] = 1;
+      board2[target] = 3;
       document.querySelector('.container2').removeEventListener('click', pewPew);
       aiTurn = true;
       posFired.push(target);
