@@ -6,17 +6,24 @@ body {
   display: grid;
   justify-content: center;
   align-items: center;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 100px auto;
   grid-template-areas: 
     "hdr hdr hdr"
     "side1 cntr side2"
     "side1 cntr2 side2";
+  background-image: url(/Users/alynguyen/GA_SEI/battle-ship/img/under.jpg);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  font-family: 'Press Start 2P';
 }
 
 header {
   grid-area: hdr;
-  background-color: blue;
+  font-size: 75px;
+  color: white;
+  text-align: center;
+  text-shadow: -3px 0 black, 0 3px black, 3px 0 black, 0 -3px black;
 }
 
 section.container {
@@ -38,15 +45,46 @@ section.container2 {
 }
 
 section.leftside {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   grid-area: side1;
+  margin: auto;
+}
+
+section button{
+  border-radius: 5px;
+  font-size: 25px;
+  margin: 10px;
+  font-family: 'Press Start 2P';
+  padding: 15px;
+  border: 3px solid black;
 }
 
 section.rightside {
-  display: grid;
+  display: flex;
   grid-area: side2;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: auto;
 }
 
 div.board1, div.board2 {
   border: 1px solid black;
 }
+
+/* #btn-s1 {
+  visibility: hidden;
+} */
+
+/* #btn-s2 {
+  display: none;
+}
+
+#btn-s3 {
+  display: none;
+}
+
+#btn-s4 {
+  display: none;
+} */

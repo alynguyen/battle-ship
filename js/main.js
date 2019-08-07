@@ -37,6 +37,13 @@ const AIDIR = [-1, 1];
 const SHIPSINPLAY = 11;
 const HARDMODE = 0;
 
+let explode = new Audio();
+explode.src = "audio/explode.wav";
+let splash = new Audio();
+splash.src = "audio/splash.wav";
+let select = new Audio();
+select.src = "audio/select.wav";
+
 
 /*----- app's state (variables) -----*/ 
 let board, turn, moves, winner;
@@ -131,6 +138,16 @@ function initS1(){
   document.querySelector('.container').addEventListener('mouseover', hvrOverS1);
   document.querySelector('.container').addEventListener('mouseout', hvrOutS1);
   document.querySelector('.container').addEventListener('click', addS1);
+  select.play();
+}
+
+function checkWinner() {
+  if (hits === aiSPlaced) {
+    console.log('Player Wins');
+  }
+  if (aiHits === sPlaced) {
+    console.log('AI wins');
+  }
 }
 
 function hvrOverS1(evt) {
@@ -235,6 +252,7 @@ function addS1(evt) {
 }
 
 function initS2(){
+  select.play();
   document.querySelector('.container').addEventListener('mouseover', hvrOverS2);
   document.querySelector('.container').addEventListener('mouseout', hvrOutS2);
   document.querySelector('.container').addEventListener('click', addS2);
@@ -352,6 +370,7 @@ function addS2(evt) {
 }
 
 function initS3(){
+  select.play();
   document.querySelector('.container').addEventListener('mouseover', hvrOverS3);
   document.querySelector('.container').addEventListener('mouseout', hvrOutS3);
   document.querySelector('.container').addEventListener('click', addS3);
@@ -476,6 +495,7 @@ function addS3(evt) {
 }
 
 function initS4(){
+  select.play();
   document.querySelector('.container').addEventListener('mouseover', hvrOverS4);
   document.querySelector('.container').addEventListener('mouseout', hvrOutS4);
   document.querySelector('.container').addEventListener('click', addS4);
@@ -795,6 +815,7 @@ setTimeout (aiShip3, 300);
 setTimeout (aiShip4, 400);
 
 function startGame () {
+  select.play();
   if (sPlaced === SHIPSINPLAY) {
     document.querySelector('.container2').addEventListener('click', pewPew);
   } else {
@@ -809,7 +830,10 @@ function pewPew(evt) {
       board2[target] = 2;
       console.log('hit');
       posFired.push(target);
+      hits++;
+      explode.play();
       render();
+      checkWinner();
       return;
     } else if (!posFired.includes(target) && !aiShipPos.includes(target)) {
       console.log('ai turn')
@@ -817,6 +841,7 @@ function pewPew(evt) {
       document.querySelector('.container2').removeEventListener('click', pewPew);
       aiTurn = true;
       posFired.push(target);
+      splash.play();
       aiShootMode();
       render();
     } else if (posFired.includes(target)) {
@@ -977,6 +1002,7 @@ function aiPewPew() {
       console.log('ai hit');
       console.log(rngFirePos);
       aiShootMode();
+      checkWinner();
     } else {
       console.log('ai miss');
       board[rngFirePos] = 3;
