@@ -16,6 +16,7 @@ body {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   font-family: 'Press Start 2P';
+  cursor: pointer;
 }
 
 header {
@@ -23,7 +24,7 @@ header {
   font-size: 75px;
   color: white;
   text-align: center;
-  text-shadow: -3px 0 black, 0 3px black, 3px 0 black, 0 -3px black;
+  text-shadow: -5px 0 black, 0 5px black, 5px 0 black, 0 -5px black;
 }
 
 section.container {
@@ -42,6 +43,7 @@ section.container2 {
   margin: 20px;
   grid-template-columns: repeat(8, 40px);
   grid-template-rows: repeat(8, 40px);
+  cursor: crosshair;
 }
 
 section.leftside {
@@ -58,7 +60,13 @@ section button{
   margin: 10px;
   font-family: 'Press Start 2P';
   padding: 15px;
-  border: 3px solid black;
+  border: 5px solid black;
+  outline: none;
+  cursor: pointer;
+}
+
+section button:active {
+  border: 5px solid grey;
 }
 
 section.rightside {
@@ -71,6 +79,49 @@ section.rightside {
 
 div.board1, div.board2 {
   border: 1px solid black;
+}
+
+div.text-box {
+  background-color: white;
+  border: 5px solid black;
+  border-radius: 2%;
+  padding: 10px;
+  font-size: 15px;
+  letter-spacing: 1px;
+  height: 400px;
+  width: 300px;
+  margin-bottom: 15px;
+}
+
+img.img-pir {
+  height: 100%;
+  object-fit: contain;
+  padding-top: 5px;
+  padding-left: 3px;
+}
+
+img.img-pir2 {
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
+}
+
+img.img-boat {
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
+}
+
+img.img-ship {
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
+}
+
+img.img-fire {
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
 }
 
 /* #btn-s1 {
