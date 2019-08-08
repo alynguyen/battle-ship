@@ -1,6 +1,6 @@
 # Battleship
 
-<center>![Screenshot 1](img/battleship.jpg "Screenshot 1")</center>
+![Screenshot 1](img/battleship.jpg "Screenshot 1")
 
 Battleship is a 2 player strategy game. Each player places ships on a grid. The goal of the game is to guess where the other player's ships are placed. When player makes a correct guess, they will get another turn to guess again. Turn switches when guess is wrong. The first player to sink all of the other player's ships wins the game.
 
