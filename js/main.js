@@ -753,10 +753,10 @@ function aiShip3() {
     SHIPS.ship3v.forEach(function(p, i) {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
-      aiS3ConstraintsPush(aiTpos);
+      aiS3ConstraintsPush(aiTPos);
       board2[rngPos + p] = 0;
       aiSPlaced ++;
-    }); 
+    });
   }
   render();
 }
@@ -857,14 +857,15 @@ function aiShootMode() {
   if (HARDMODE === 0) {
     aiPewPew();
   }
-  if (aiMiss && HARDMODE === 1 ) {
+  if (aiMiss && HARDMODE === 1 && !aiHitAgain) {
     aiPewPew();
   }
   if (aiMiss && HARDMODE === 1 && aiHitAgain) {
     rngNextHitAgain();
   }
   if (!aiMiss && HARDMODE === 1) {
-    rngNextHit();
+    rngNextHit(aiLastHit);
+    console.log('shoot mode 3');
   }
 }
 
@@ -882,7 +883,7 @@ function aiPewPew() {
       aiLastHit = rngFirePos;
       aiMiss = false;
       aiShotsFired++;
-      aiShootMode();
+      aiShootMode(aiLastHit);
       checkWinner();
       updateStats();
     } else {
@@ -980,17 +981,18 @@ function rngNextHit() {
     aiHardArr.push(aiLastHit - 8);
     aiNextHit = aiRng(aiHardArr);
     checkNextHit(aiNextHit);
-  }
-  if (!AIBORDERS.r0.includes(aiLastHit)
-    && !AIBORDERS.r56.includes(aiLastHit)
-    && !AIBORDERS.c0.includes(aiLastHit)
-    && !AIBORDERS.c7.includes(aiLastHit)) {
+  } else {
+  // if (!AIBORDERS.r0.includes(aiLastHit)
+  //   && !AIBORDERS.r56.includes(aiLastHit)
+  //   && !AIBORDERS.c0.includes(aiLastHit)
+  //   && !AIBORDERS.c7.includes(aiLastHit)) {
     aiHardArr.push(aiLastHit - 1);
     aiHardArr.push(aiLastHit + 1);
     aiHardArr.push(aiLastHit - 8);
     aiHardArr.push(aiLastHit + 8);
     aiNextHit = aiRng(aiHardArr);
     checkNextHit(aiNextHit);
+    console.log('else ran');
   }
 }//console log else to test if is valid
 //make array of constraints instead ^
@@ -1026,7 +1028,6 @@ function aiHardMode() {
     aiLastHit = aiNextHit;
     aiShotsFired++;
     console.log('ai hit again');
-    console.log(aiNextHit);
     rngNextHit();
     render();
   }
