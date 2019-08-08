@@ -36,7 +36,6 @@ const AIBORDERS = {
 
 const AIDIR = [-1, 1];
 const SHIPSINPLAY = 11;
-const HARDMODE = 0;
 
 let explode = new Audio();
 explode.src = "audio/explode.wav";
@@ -78,6 +77,7 @@ let aiLastHit = null;
 let aiHitAgain = false;
 let shotsFired = 0;
 let aiShotsFired = 0;
+let hardMode = 0;
 
 /*----- cached element references -----*/ 
 let rmvB1 = document.getElementById('btn-s1');
@@ -854,16 +854,16 @@ function pewPew(evt) {
 }
 
 function aiShootMode() {
-  if (HARDMODE === 0) {
+  if (hardMode === 0) {
     aiPewPew();
   }
-  if (aiMiss && HARDMODE === 1 ) {
+  if (aiMiss && hardMode === 1 ) {
     aiPewPew();
   }
-  if (aiMiss && HARDMODE === 1 && aiHitAgain) {
+  if (aiMiss && hardMode === 1 && aiHitAgain) {
     rngNextHitAgain();
   }
-  if (!aiMiss && HARDMODE === 1) {
+  if (!aiMiss && hardMode === 1) {
     rngNextHit();
   }
 }

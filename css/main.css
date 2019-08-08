@@ -12,7 +12,7 @@ body {
     "hdr hdr hdr"
     "side1 cntr side2"
     "side1 cntr2 side2";
-  background-image: url(img/under.jpg);
+  background-image: url(../img/under.jpg);
   background-repeat: no-repeat;
   background-size: 100% 100%;
   font-family: 'Press Start 2P';
