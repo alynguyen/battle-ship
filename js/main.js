@@ -753,7 +753,7 @@ function aiShip3() {
     SHIPS.ship3v.forEach(function(p, i) {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
-      aiS3ConstraintsPush(aiTpos);
+      aiS3ConstraintsPush(aiTPos);
       board2[rngPos + p] = 0;
       aiSPlaced ++;
     }); 
