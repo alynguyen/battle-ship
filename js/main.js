@@ -644,7 +644,7 @@ function aiShip1() {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
       aiS1ConstraintsPush(aiTPos);
-      board2[rngPos + p] = 1;
+      board2[rngPos + p] = 0;
       aiSPlaced ++;
     });   
   }
@@ -658,7 +658,7 @@ function aiShip1() {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
       aiS1ConstraintsPush(aiTPos);
-      board2[rngPos + p] = 1;
+      board2[rngPos + p] = 0;
       aiSPlaced ++;
     }); 
   }
@@ -687,7 +687,7 @@ function aiShip2() {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
       aiS2ConstraintsPush(aiTPos);
-      board2[rngPos + p] = 1;
+      board2[rngPos + p] = 0;
       aiSPlaced ++;
     });   
   }
@@ -703,7 +703,7 @@ function aiShip2() {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
       aiS2ConstraintsPush(aiTPos);
-      board2[rngPos + p] = 1;
+      board2[rngPos + p] = 0;
       aiSPlaced ++;
     }); 
   }
@@ -736,7 +736,7 @@ function aiShip3() {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
       aiS3ConstraintsPush(aiTPos);
-      board2[rngPos + p] = 1;
+      board2[rngPos + p] = 0;
       aiSPlaced ++;
     });   
   }
@@ -754,7 +754,7 @@ function aiShip3() {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
       aiS3ConstraintsPush(aiTpos);
-      board2[rngPos + p] = 1;
+      board2[rngPos + p] = 0;
       aiSPlaced ++;
     }); 
   }
@@ -779,7 +779,7 @@ function aiShip4() {
     SHIPS.ship4.forEach(function(p, i) {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
-      board2[rngPos + p] = 1;
+      board2[rngPos + p] = 0;
       aiSPlaced ++;
     });   
   }
@@ -798,7 +798,7 @@ function aiShip4() {
     SHIPS.ship4v.forEach(function(p, i) {
       let aiTPos = rngPos + p;
       aiShipPos.push(aiTPos);
-      board2[rngPos + p] = 1;
+      board2[rngPos + p] = 0;
       aiSPlaced ++;
     }); 
   }
