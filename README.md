@@ -23,7 +23,11 @@ Battleship is a 2 player strategy game. Each player places ships on a grid. The 
 * Red - Ship hit
 * First to sink all ships wins the game.
 
+<<<<<<< HEAD
 [Click here to play!](https://alynguyen.github.io/battle-ship/)
+=======
+[Click here to play!!](https://alynguyen.github.io/battle-ship/)
+>>>>>>> master
 
 # Next Steps
 * Display ship graphics instead of grid.
