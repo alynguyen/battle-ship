@@ -82,6 +82,8 @@ div.board1, div.board2 {
 }
 
 div.text-box {
+  display: flex;
+  justify-content: space-between;
   background-color: white;
   border: 5px solid black;
   border-radius: 2%;
@@ -93,10 +95,46 @@ div.text-box {
   margin: auto;
 }
 
+div p.stats {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+p.stat {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 10px;
+}
+
+
+#s-ai-acc {
+  margin-left: 50px;
+}
+
 #p-stats, #ai-stats {
   display: none;
 }
 
+h1, h3, h5 {
+  text-align: center;
+}
+
+h1 {
+  font-size: 25px;
+}
+
+.stats {
+  text-align: justify;
+}
+
+#p-msg, #ai-msg {
+  text-align: center;
+}
 
 img.img-pir {
   height: 100%;

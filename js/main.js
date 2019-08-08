@@ -109,17 +109,6 @@ let aiRShips = document.getElementById('s-ai-rships');
 let aiHitsMsg = document.getElementById('h1-ai-hits');
 let instrBox = document.getElementById('tb-ai');
 
-function updateStats() {
-  pHitsMsg.innerHTML = `${hits}`;
-  pShotsFiredMsg.innerHTML = `${shotsFired}`;
-  pAcc.innerHTML = `${hits / shotsFired * 100}`;
-  pRShips.innerHTML = `${aiHits - sPlaced * -1}`;
-  aiHitsMsg.innerHTML = `${aiHits}`;
-  aiShotsFiredMsg.innerHTML = `${aiShotsFired}`;
-  aiAcc.innerHTML = `${aiHits / aiShotsFired * 100}`;
-  aiRShips.innerHTML = `${hits - aiSPlaced * -1}`;
-}
-
 /*----- event listeners -----*/
 document.getElementById('start-game').addEventListener('click', startGame);
 document.getElementById('btn-s1').addEventListener('click', initS1);
@@ -187,11 +176,11 @@ function initS1(){
 
 function checkWinner() {
   if (hits === aiSPlaced) {
-    console.log('Player Wins');
+    pMsg.innerHTML = 'You Win!';
     document.querySelector('.container2').removeEventListener('click', pewPew);
   }
   if (aiHits === sPlaced) {
-    console.log('AI wins');
+    aiMsg.innerHTML = 'You Win!';
   }
 }
 
@@ -1083,6 +1072,18 @@ function aiPewPew() {
       return;
     }
 }
+
+function updateStats() {
+  pHitsMsg.innerHTML = `${hits}`;
+  pShotsFiredMsg.innerHTML = `${shotsFired}`;
+  pAcc.innerHTML = `%${Math.round(hits / shotsFired * 100)}`;
+  pRShips.innerHTML = `${sPlaced - aiHits}`;
+  aiHitsMsg.innerHTML = `${aiHits}`;
+  aiShotsFiredMsg.innerHTML = `${aiShotsFired}`;
+  aiAcc.innerHTML = `%${Math.round(aiHits / aiShotsFired * 100)}`;
+  aiRShips.innerHTML = `${aiSPlaced - hits}`;
+}
+
 
 
 // function aiShip1() {

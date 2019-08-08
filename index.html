@@ -147,13 +147,13 @@
   </section>
   <section class="leftside">
     <div class="text-box" id="p-stats">
-      <h3>Player Stats</h3>
+      <h3>Player Stats</h3><br>
       <h1 id="h1-hits"></h1>
-      <h5>Ships Hit<h5>
+      <h5>Ships Hit</h5><br>
       <p class="stats">
-         Shots Fired: <span id="s-shots-fired">S</span><br><br>
-         Accuracy: %<span id="s-acc"></span><br><br>
-         Remaining Ships: <span id="s-rships"></span><br><br>
+         <p class="stat">Shots Fired: <span id="s-shots-fired"></span></p><br>
+         <p class="stat">Accuracy: <span id="s-acc"></span></p><br>
+         <p class="stat">Remaining Ships: <span id="s-rships"></span></p><br>
       </p>
       <p id="p-msg"></p>
     </div>
@@ -162,17 +162,17 @@
     <button id="btn-s3">Ship 3</button>
     <button id="btn-s4">Ship 4</button>
     <button id="btn-rotate">Rotate</button>
-    <button id="btn-reset">Reset</button>
+    <button id="btn-reset" onclick="location.reload()>Reset</button>
   </section>
   <section class ="rightside">
     <div class="text-box" id="ai-stats">
-          <h3>AI Stats</h3>
+          <h3>AI Stats</h3><br>
           <h1 id="h1-ai-hits"></h1>
-          <h5>Ships Hit<h5>
+          <h5>Ships Hit</h5><br>
           <p class="stats">
-             Shots Fired: <span id="s-ai-shots-fired">S</span><br><br>
-             Accuracy: %<span id="s-ai-acc"></span><br><br>
-             Remaining Ships: <span id="s-ai-rships"></span><br><br>
+            <p class="stat">Shots Fired: <span id="s-ai-shots-fired"></span></p><br>
+              <p class="stat">Accuracy: <span id="s-ai-acc"></span></p><br>
+                <p class="stat">Remaining Ships: <span id="s-ai-rships"></span></p><br>
           </p>
           <p id="ai-msg"></p>
         </div>
