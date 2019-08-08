@@ -278,7 +278,6 @@ function initS2(){
   document.querySelector('.container').addEventListener('click', addS2);
 }
 
-
 function hvrOverS2(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
   if (dir === 1) {
@@ -907,6 +906,7 @@ function updateStats() {
   aiAcc.innerHTML = `%${Math.round(aiHits / aiShotsFired * 100)}`;
   aiRShips.innerHTML = `${aiSPlaced - hits}`;
 }
+
 
 /*------------------------ Still testing below  -------------------------*/
 
