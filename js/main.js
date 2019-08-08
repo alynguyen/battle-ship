@@ -36,7 +36,6 @@ const AIBORDERS = {
 
 const AIDIR = [-1, 1];
 const SHIPSINPLAY = 11;
-const HARDMODE = 0;
 
 let explode = new Audio();
 explode.src = "audio/explode.wav";
@@ -78,6 +77,7 @@ let aiLastHit = null;
 let aiHitAgain = false;
 let shotsFired = 0;
 let aiShotsFired = 0;
+let hardMode = 0;
 
 /*----- cached element references -----*/ 
 let rmvB1 = document.getElementById('btn-s1');
@@ -277,6 +277,7 @@ function initS2(){
   document.querySelector('.container').addEventListener('mouseout', hvrOutS2);
   document.querySelector('.container').addEventListener('click', addS2);
 }
+
 
 function hvrOverS2(evt) {
   let pos = parseInt(evt.target.id.replace('pos', ''));
@@ -755,7 +756,7 @@ function aiShip3() {
       aiS3ConstraintsPush(aiTPos);
       board2[rngPos + p] = 0;
       aiSPlaced ++;
-    });
+    }); 
   }
   render();
 }
@@ -853,18 +854,17 @@ function pewPew(evt) {
 }
 
 function aiShootMode() {
-  if (HARDMODE === 0) {
+  if (hardMode === 0) {
     aiPewPew();
   }
-  if (aiMiss && HARDMODE === 1 && !aiHitAgain) {
+  if (aiMiss && hardMode === 1 ) {
     aiPewPew();
   }
-  if (aiMiss && HARDMODE === 1 && aiHitAgain) {
+  if (aiMiss && hardMode === 1 && aiHitAgain) {
     rngNextHitAgain();
   }
-  if (!aiMiss && HARDMODE === 1) {
-    rngNextHit(aiLastHit);
-    console.log('shoot mode 3');
+  if (!aiMiss && hardMode === 1) {
+    rngNextHit();
   }
 }
 
@@ -882,7 +882,7 @@ function aiPewPew() {
       aiLastHit = rngFirePos;
       aiMiss = false;
       aiShotsFired++;
-      aiShootMode(aiLastHit);
+      aiShootMode();
       checkWinner();
       updateStats();
     } else {
@@ -906,7 +906,6 @@ function updateStats() {
   aiAcc.innerHTML = `%${Math.round(aiHits / aiShotsFired * 100)}`;
   aiRShips.innerHTML = `${aiSPlaced - hits}`;
 }
-
 
 /*------------------------ Still testing below  -------------------------*/
 
@@ -981,18 +980,17 @@ function rngNextHit() {
     aiHardArr.push(aiLastHit - 8);
     aiNextHit = aiRng(aiHardArr);
     checkNextHit(aiNextHit);
-  } else {
-  // if (!AIBORDERS.r0.includes(aiLastHit)
-  //   && !AIBORDERS.r56.includes(aiLastHit)
-  //   && !AIBORDERS.c0.includes(aiLastHit)
-  //   && !AIBORDERS.c7.includes(aiLastHit)) {
+  }
+  if (!AIBORDERS.r0.includes(aiLastHit)
+    && !AIBORDERS.r56.includes(aiLastHit)
+    && !AIBORDERS.c0.includes(aiLastHit)
+    && !AIBORDERS.c7.includes(aiLastHit)) {
     aiHardArr.push(aiLastHit - 1);
     aiHardArr.push(aiLastHit + 1);
     aiHardArr.push(aiLastHit - 8);
     aiHardArr.push(aiLastHit + 8);
     aiNextHit = aiRng(aiHardArr);
     checkNextHit(aiNextHit);
-    console.log('else ran');
   }
 }//console log else to test if is valid
 //make array of constraints instead ^
@@ -1028,6 +1026,7 @@ function aiHardMode() {
     aiLastHit = aiNextHit;
     aiShotsFired++;
     console.log('ai hit again');
+    console.log(aiNextHit);
     rngNextHit();
     render();
   }
