@@ -999,11 +999,13 @@ function checkNextHit() {
   if (!aiPosFired.includes(aiNextHit)) {
     aiHardMode(aiNextHit);
     console.log('did not include > hard mode');
-  }
+  } 
   else if (aiPosFired.includes(aiNextHit)) {
+    aiTest++;
     rngNextHitAgain();
     console.log('included hitting again');
-  } else {
+  } 
+  else {
     console.log('else statement')
     aiHitAgain = false;
     aiShootMode();
@@ -1012,11 +1014,22 @@ function checkNextHit() {
   //nexthit false
 }
 
+let aiTest = 0;
+
 function rngNextHitAgain() {
+  if (aiTest >= 2) {
+    aiPewPew();
+    console.log('aipewpewran'); 
+    aiTest = 0;
+    return;
+  }
+  aiTest++;
   aiNextHit = aiRng(aiHardArr);
   checkNextHit(aiNextHit);
   console.log('rngNextHitAgain');
-}
+} //error right here
+
+
 
 function aiHardMode() {
   if (shipPos.includes(aiNextHit)) {
@@ -1026,12 +1039,11 @@ function aiHardMode() {
     aiLastHit = aiNextHit;
     aiShotsFired++;
     console.log('ai hit again');
-    console.log(aiNextHit);
-    rngNextHit();
+    // rngNextHit();
     render();
+    checkWinner();
   }
   if (!shipPos.includes(aiNextHit)) {
-    console.log(aiNextHit);
     console.log('ai miss next hit');
     board[aiNextHit] = 3;
     aiShotsFired++;
@@ -1039,7 +1051,6 @@ function aiHardMode() {
     aiHitAgain = true;
     document.querySelector('.container2').addEventListener('click', pewPew);
     render();
-    return;
   }
 }
 
